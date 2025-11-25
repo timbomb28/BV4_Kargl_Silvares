@@ -43,19 +43,15 @@ public class ToneCurve {
             // brightness adjustment
             double value = grayIn + brightness;
 
-            // contrast adjustment (centered around 128)
             value = (value - 128) * contrast + 128;
 
-            // gamma correction (normalized 0..1)
             double normalized = value / 255.0;
             if(normalized < 0) normalized = 0;
             if(normalized > 1) normalized = 1;
             normalized = Math.pow(normalized, 1/gamma);
 
-            // back to 0..255 range
             int grayOut = (int)(normalized * 255.0);
 
-            // clamp
             if(grayOut < 0) grayOut = 0;
             if(grayOut > 255) grayOut = 255;
 
@@ -77,7 +73,6 @@ public class ToneCurve {
             int g = (pixel >> 8) & 0xFF;
             int b = pixel & 0xFF;
 
-            // assume grayscale image → r == g == b
             int grayIn = r;
 
             int grayOut = grayTable[grayIn];
@@ -99,10 +94,8 @@ public class ToneCurve {
         gc.beginPath();
         double shift = 0.5;
 
-        // Start at x=0
         gc.moveTo(0 + shift, (grayLevels - 1 - grayTable[0]) + shift);
 
-        // Draw curve for x = 1..255
         for (int x = 1; x < grayLevels; x++) {
             double y = grayLevels - 1 - grayTable[x];
             gc.lineTo(x + shift, y + shift);
